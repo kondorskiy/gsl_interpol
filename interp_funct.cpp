@@ -181,13 +181,24 @@ class InterpFunct
 
 
   /*------------------------------------------------------------------
-    Borders of the interval.
+    Borders of the interval. Factors ensure that actual
+    border values would be inside the interpolation range.
   ------------------------------------------------------------------*/
   public: double getXmin()
-    { return x_min; }
+  {
+    if(x_min > 0.0)
+      return x_min*0.99999;
+    else
+      return x_min*1.00001;
+   }
 
   public: double getXmax()
-    { return x_max; }
+  {
+    if(x_max > 0.0)
+      return x_max*1.00001;
+    else
+      return x_max*0.99999;
+  }
 
 
   /*------------------------------------------------------------------
@@ -198,9 +209,9 @@ class InterpFunct
     if(is_unity)
       return 1.0;
 
-    if(x <= x_min)
+    if(x < x_min)
       return y_x_min;
-    else if(x >= x_max)
+    else if(x > x_max)
       return y_x_max;
     else
       return gsl_spline_eval(spline, x, acc);
